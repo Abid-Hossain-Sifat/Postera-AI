@@ -7,7 +7,7 @@ const templates = [
     title: "মহান বিজয় দিবস",
     category: "victoryDay",
     icon: Flag,
-    gradient: "from-red-600 via-green-700 to-green-900",
+    image: "/templates/victory-day.svg",
     badge: "জনপ্রিয়",
     badgeColor: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
   },
@@ -16,7 +16,7 @@ const templates = [
     title: "নির্বাচনী প্রচারণা",
     category: "campaign",
     icon: Vote,
-    gradient: "from-slate-700 via-slate-800 to-slate-900",
+    image: "/templates/campaign.svg",
     badge: "হট",
     badgeColor: "bg-rose-500/20 text-rose-400 border-rose-500/30",
   },
@@ -25,7 +25,7 @@ const templates = [
     title: "ঈদ মোবারক",
     category: "eid",
     icon: Moon,
-    gradient: "from-amber-700 via-yellow-800 to-slate-900",
+    image: "/templates/eid.svg",
     badge: "সিজনাল",
     badgeColor: "bg-amber-500/20 text-amber-400 border-amber-500/30",
   },
@@ -34,7 +34,7 @@ const templates = [
     title: "শোক ও শ্রদ্ধাঞ্জলি",
     category: "condolence",
     icon: Heart,
-    gradient: "from-slate-800 via-slate-900 to-slate-950",
+    image: "/templates/condolence.svg",
     badge: "ফ্রি",
     badgeColor: "bg-violet-500/20 text-violet-400 border-violet-500/30",
   },
@@ -77,21 +77,13 @@ const FeaturedTemplates = () => {
               className="group relative bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden hover:border-emerald-500/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-500/5"
             >
               {/* Visual preview */}
-              <div className={`aspect-[3/4] bg-gradient-to-b ${t.gradient} flex flex-col items-center justify-center relative overflow-hidden`}>
-                {/* Background decoration */}
-                <div className="absolute inset-0 opacity-10">
-                  <div className="absolute top-2 left-2 right-2 h-px bg-white/50" />
-                  <div className="absolute bottom-8 left-2 right-2 h-px bg-white/50" />
-                </div>
-
-                <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center mb-3 shadow-lg">
-                  <t.icon className="w-7 h-7 text-white drop-shadow" />
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60 to-transparent flex items-end justify-center pb-3">
-                  <span className="text-white text-[10px] font-bold uppercase tracking-widest opacity-70">
-                    Postera.ai
-                  </span>
-                </div>
+              <div className="aspect-[3/4] bg-slate-950 flex flex-col items-center justify-center relative overflow-hidden">
+                <img
+                  src={t.image}
+                  alt={t.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60" />
 
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -103,7 +95,7 @@ const FeaturedTemplates = () => {
                 </div>
 
                 {/* Badge */}
-                <div className={`absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase border ${t.badgeColor}`}>
+                <div className={`absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase border ${t.badgeColor} backdrop-blur-md`}>
                   {t.badge}
                 </div>
               </div>

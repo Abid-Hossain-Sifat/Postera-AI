@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Hind_Siliguri, Noto_Serif_Bengali } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
@@ -15,6 +15,20 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const hindSiliguri = Hind_Siliguri({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["bengali"],
+  variable: "--font-hind-siliguri",
+  display: "swap",
+});
+
+const notoSerifBengali = Noto_Serif_Bengali({
+  weight: ["600", "700", "800", "900"],
+  subsets: ["bengali"],
+  variable: "--font-noto-serif-bengali",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Postera AI - AI Political Poster Maker",
   description: "বাংলাদেশের প্রথম এআই চালিত প্রিন্ট-রেডি বাংলা রাজনৈতিক পোস্টার মেকার",
@@ -28,7 +42,7 @@ export default function RootLayout({
   return (
     <html
       lang="bn"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
+      className={`${geistSans.variable} ${geistMono.variable} ${hindSiliguri.variable} ${notoSerifBengali.variable} h-full antialiased dark`}
     >
       <body className="min-h-full flex flex-col bg-slate-950 text-slate-100">
         <Navbar />

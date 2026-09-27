@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import { usePathname } from "next/navigation";
-import { getPosterById, regeneratePoster } from "@/lib/Data";
+import { getPosterById, regeneratePoster, downloadFile, getPosterPdfUrl } from "@/lib/Data";
 import { toast } from "react-toastify";
 import Link from "next/link";
-import { Palette, AlertTriangle, Check } from "lucide-react";
+import { Palette, AlertTriangle, Check, FileDown, Download, Copy } from "lucide-react";
 
 const MAX_RETRIES = 3;
 type PosterStatus = "loading" | "generating" | "completed" | "failed";
@@ -31,6 +31,8 @@ const PosterPage = () => {
   const [uiStatus, setUiStatus] = useState<PosterStatus>("loading");
   const [retryCount, setRetryCount] = useState(0);
   const [pollingCount, setPollingCount] = useState(0);
+  const [downloadingImage, setDownloadingImage] = useState(false);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
 
   const fetchPoster = useCallback(async () => {
     if (!posterId) return;
@@ -194,18 +196,49 @@ const PosterPage = () => {
 
             {uiStatus === "completed" && imageUrl && (
               <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-2.5">
-                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">ডাউনলোড</h3>
-                <a href={imageUrl} download="postera_ai_poster.jpg" className="flex items-center justify-center gap-2 w-full py-3 bg-white text-slate-950 font-black rounded-xl hover:bg-slate-100 transition-all text-sm shadow">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
-                  HD ডাউনলোড (JPG)
-                </a>
-                <button onClick={() => { navigator.clipboard.writeText(imageUrl); toast.success("লিংক কপি হয়েছে!"); }} className="flex items-center justify-center gap-2 w-full py-3 bg-slate-800 text-slate-200 font-bold rounded-xl hover:bg-slate-700 transition-all text-sm border border-slate-700">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
-                  লিংক কপি করুন
+                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">ডাউনলোড ও এক্সপোর্ট</h3>
+                
+                {/* PNG Download */}
+                <button
+                  disabled={downloadingImage}
+                  onClick={async () => {
+                    setDownloadingImage(true);
+                    toast.info("HD ইমেজ ডাউনলোড হচ্ছে...");
+                    await downloadFile(imageUrl, `postera_${posterId}.png`);
+                    setDownloadingImage(false);
+                  }}
+                  className="flex items-center justify-center gap-2 w-full py-3 bg-white text-slate-950 font-black rounded-xl hover:bg-slate-100 transition-all text-sm shadow cursor-pointer disabled:opacity-50"
+                >
+                  <Download className={`w-4 h-4 stroke-[2.5] ${downloadingImage ? "animate-bounce" : ""}`} />
+                  {downloadingImage ? "ডাউনলোড হচ্ছে..." : "HD ইমেজ ডাউনলোড (PNG)"}
+                </button>
+
+                {/* PDF Download */}
+                <button
+                  disabled={downloadingPdf}
+                  onClick={async () => {
+                    setDownloadingPdf(true);
+                    toast.info("প্রিন্ট-রেডি PDF প্রস্তুত হচ্ছে...");
+                    await downloadFile(getPosterPdfUrl(posterId), `postera_${posterId}.pdf`);
+                    setDownloadingPdf(false);
+                    toast.success("PDF ডাউনলোড সম্পন্ন হয়েছে!");
+                  }}
+                  className="flex items-center justify-center gap-2 w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-black rounded-xl hover:opacity-90 transition-all text-sm shadow cursor-pointer disabled:opacity-50"
+                >
+                  <FileDown className={`w-4 h-4 stroke-[2.5] ${downloadingPdf ? "animate-bounce" : ""}`} />
+                  {downloadingPdf ? "PDF তৈরি হচ্ছে..." : "প্রিন্ট-রেডি PDF ডাউনলোড (A4)"}
+                </button>
+
+                {/* Copy Link */}
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    toast.success("পোস্টার লিংক কপি হয়েছে!");
+                  }}
+                  className="flex items-center justify-center gap-2 w-full py-2.5 bg-slate-800 text-slate-200 font-bold rounded-xl hover:bg-slate-700 transition-all text-xs border border-slate-700 cursor-pointer"
+                >
+                  <Copy className="w-3.5 h-3.5" />
+                  পোস্টার লিংক কপি করুন
                 </button>
               </div>
             )}

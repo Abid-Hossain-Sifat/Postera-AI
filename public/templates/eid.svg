@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" width="600" height="800">
+  <defs>
+    <linearGradient id="bgGradEid" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#022115"/>
+      <stop offset="45%" stop-color="#05452d"/>
+      <stop offset="85%" stop-color="#02291a"/>
+      <stop offset="100%" stop-color="#00140b"/>
+    </linearGradient>
+    <radialGradient id="moonGlow" cx="50%" cy="25%" r="35%">
+      <stop offset="0%" stop-color="#ffd54f" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="goldGradEid" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff5cc"/>
+      <stop offset="30%" stop-color="#eab308"/>
+      <stop offset="70%" stop-color="#ca8a04"/>
+      <stop offset="100%" stop-color="#fde047"/>
+    </linearGradient>
+    <filter id="goldGlowEid" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3.5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <filter id="shadowEid" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="600" height="800" fill="url(#bgGradEid)"/>
+  <rect width="600" height="800" fill="url(#moonGlow)"/>
+
+  <!-- Islamic Geometric Pattern Background Accent -->
+  <g opacity="0.05" stroke="#ffffff" stroke-width="1.2" fill="none">
+    <circle cx="300" cy="200" r="160"/>
+    <circle cx="300" cy="200" r="120"/>
+    <polygon points="300,50 380,120 410,200 380,280 300,350 220,280 190,200 220,120"/>
+    <polygon points="300,70 360,130 390,200 360,270 300,330 240,270 210,200 240,130"/>
+  </g>
+
+  <!-- Mosque Dome & Minarets Silhouette -->
+  <g fill="#011a10" opacity="0.8">
+    <rect x="0" y="320" width="600" height="40"/>
+    <!-- Center Dome -->
+    <path d="M220,320 C220,240 380,240 380,320 Z"/>
+    <rect x="298" y="225" width="4" height="20" fill="url(#goldGradEid)"/>
+    <circle cx="300" cy="220" r="4" fill="url(#goldGradEid)"/>
+    <!-- Left Minaret -->
+    <rect x="80" y="210" width="22" height="110"/>
+    <polygon points="91,180 75,210 107,210" fill="url(#goldGradEid)"/>
+    <!-- Right Minaret -->
+    <rect x="498" y="210" width="22" height="110"/>
+    <polygon points="509,180 493,210 525,210" fill="url(#goldGradEid)"/>
+  </g>
+
+  <!-- Hanging Golden Fanus Lanterns -->
+  <!-- Left Lantern -->
+  <g transform="translate(100, 40)">
+    <line x1="0" y1="0" x2="0" y2="70" stroke="url(#goldGradEid)" stroke-width="1.5"/>
+    <polygon points="0,70 -12,85 -8,110 0,118 8,110 12,85" fill="url(#goldGradEid)" filter="url(#shadowEid)"/>
+    <circle cx="0" cy="98" r="4" fill="#ffffff"/>
+  </g>
+  <!-- Right Lantern -->
+  <g transform="translate(500, 40)">
+    <line x1="0" y1="0" x2="0" y2="70" stroke="url(#goldGradEid)" stroke-width="1.5"/>
+    <polygon points="0,70 -12,85 -8,110 0,118 8,110 12,85" fill="url(#goldGradEid)" filter="url(#shadowEid)"/>
+    <circle cx="0" cy="98" r="4" fill="#ffffff"/>
+  </g>
+
+  <!-- Crescent Moon & Star -->
+  <g transform="translate(300, 110)">
+    <!-- Crescent -->
+    <path d="M-20,-35 A45,45 0 1,0 35,35 A38,38 0 1,1 -20,-35 Z" fill="url(#goldGradEid)" filter="url(#goldGlowEid)"/>
+    <!-- Star -->
+    <polygon points="26,-6 29,2 38,2 31,8 33,16 26,11 19,16 21,8 14,2 23,2" fill="url(#goldGradEid)"/>
+  </g>
+
+  <!-- Ornate Golden Outer Borders -->
+  <rect x="20" y="20" width="560" height="760" rx="16" fill="none" stroke="url(#goldGradEid)" stroke-width="3" filter="url(#goldGlowEid)"/>
+  <rect x="28" y="28" width="544" height="744" rx="10" fill="none" stroke="url(#goldGradEid)" stroke-width="1.2" stroke-dasharray="6,4" opacity="0.7"/>
+
+  <!-- Top Ribbon Banner: আসসালামু আলাইকুম -->
+  <g transform="translate(300, 48)">
+    <rect x="-110" y="0" width="220" height="26" rx="13" fill="#000" opacity="0.4" stroke="url(#goldGradEid)" stroke-width="1"/>
+    <text x="0" y="18" font-family="'Hind Siliguri', sans-serif" font-size="13" font-weight="600" fill="url(#goldGradEid)" text-anchor="middle" letter-spacing="1">تقبل الله منا ومنكم</text>
+  </g>
+
+  <!-- Headline: ঈদ মোবারক -->
+  <g transform="translate(300, 205)">
+    <text x="0" y="0" font-family="'Noto Serif Bengali', serif" font-size="52" font-weight="900" fill="url(#goldGradEid)" text-anchor="middle" filter="url(#shadowEid)">ঈদ মোবারক</text>
+    <text x="0" y="32" font-family="'Hind Siliguri', sans-serif" font-size="16" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="0.5">পবিত্র ঈদুল ফিতর / ঈদুল আযহার শুভেচ্ছা</text>
+    <line x1="-120" y1="46" x2="120" y2="46" stroke="url(#goldGradEid)" stroke-width="1.5"/>
+  </g>
+
+  <!-- Candidate Oval/Arched Photo Frame Placeholder -->
+  <g transform="translate(300, 395)">
+    <ellipse cx="0" cy="0" rx="85" ry="105" fill="#fde047" opacity="0.15" filter="url(#goldGlowEid)"/>
+    <ellipse cx="0" cy="0" rx="75" ry="95" fill="#021c12" stroke="url(#goldGradEid)" stroke-width="4" filter="url(#shadowEid)"/>
+    <ellipse cx="0" cy="0" rx="68" ry="88" fill="#063d28"/>
+    <!-- Silhouette -->
+    <circle cx="0" cy="-15" r="32" fill="#0b5e3e"/>
+    <path d="M-45,65 C-45,25 45,25 45,65 Z" fill="#0b5e3e"/>
+    <text x="0" y="75" font-family="'Hind Siliguri', sans-serif" font-size="11" font-weight="bold" fill="url(#goldGradEid)" text-anchor="middle">আপনার ছবি</text>
+  </g>
+
+  <!-- Candidate Name & Designation -->
+  <g transform="translate(300, 545)">
+    <text x="0" y="0" font-family="'Noto Serif Bengali', serif" font-size="28" font-weight="bold" fill="#ffffff" text-anchor="middle" filter="url(#shadowEid)">হাজী মোঃ রফিকুল ইসলাম</text>
+    <rect x="-140" y="10" width="280" height="24" rx="4" fill="#000" opacity="0.4"/>
+    <text x="0" y="27" font-family="'Hind Siliguri', sans-serif" font-size="14" font-weight="600" fill="#ffd54f" text-anchor="middle">বিশিষ্ট সমাজসেবক ও রাজনীতিবিদ</text>
+  </g>
+
+  <!-- Eid Prayer & Dua Message Box -->
+  <g transform="translate(300, 630)">
+    <rect x="-220" y="-20" width="440" height="52" rx="8" fill="#000" opacity="0.4" stroke="url(#goldGradEid)" stroke-width="1"/>
+    <text x="0" y="0" font-family="'Hind Siliguri', sans-serif" font-size="13" font-weight="600" fill="#ffffff" text-anchor="middle">ঈদের আনন্দ ছড়িয়ে পড়ুক প্রতিটি ঘরে ঘরে, ঘুচে যাক সকল ভেদাভেদ।</text>
+    <text x="0" y="20" font-family="'Hind Siliguri', sans-serif" font-size="13" font-weight="bold" fill="url(#goldGradEid)" text-anchor="middle">সকলকে জানাই আন্তরিক ঈদ শুভেচ্ছা ও মোবারকবাদ।</text>
+  </g>
+
+  <!-- Bottom Promotional Ribbon Footer -->
+  <g transform="translate(300, 725)">
+    <rect x="-240" y="-18" width="480" height="36" rx="6" fill="url(#goldGradEid)" filter="url(#shadowEid)"/>
+    <text x="0" y="6" font-family="'Hind Siliguri', sans-serif" font-size="15" font-weight="900" fill="#022115" text-anchor="middle">শুভেচ্ছান্তে: আপনার পরিবার ও শুভাকাঙ্ক্ষীবৃন্দ</text>
+  </g>
+</svg>

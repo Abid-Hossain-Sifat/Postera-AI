@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+.font-bangla {
+  font-family: var(--font-hind-siliguri), 'Hind Siliguri', sans-serif;
+}
+
+.font-bangla-serif {
+  font-family: var(--font-noto-serif-bengali), 'Noto Serif Bengali', serif;
+}

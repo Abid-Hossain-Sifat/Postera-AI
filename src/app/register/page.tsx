@@ -102,7 +102,7 @@ const RegisterPage = () => {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="যেমন: মোঃ রহিম আহমেদ"
+              placeholder="আপনার পূর্ণ নাম লিখুন"
               className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all text-xs sm:text-sm"
             />
           </div>

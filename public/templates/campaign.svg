@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" width="600" height="800">
+  <defs>
+    <linearGradient id="bgGradCamp" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#051329"/>
+      <stop offset="40%" stop-color="#0b2554"/>
+      <stop offset="80%" stop-color="#071a3d"/>
+      <stop offset="100%" stop-color="#020814"/>
+    </linearGradient>
+    <radialGradient id="burstGrad" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#eab308" stop-opacity="0.25"/>
+      <stop offset="60%" stop-color="#0b2554" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="goldGradCamp" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff099"/>
+      <stop offset="35%" stop-color="#eab308"/>
+      <stop offset="70%" stop-color="#ca8a04"/>
+      <stop offset="100%" stop-color="#fde047"/>
+    </linearGradient>
+    <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="50%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#1e3a8a"/>
+    </linearGradient>
+    <filter id="goldGlowCamp" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3.5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <filter id="shadowCamp" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000" flood-opacity="0.7"/>
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="600" height="800" fill="url(#bgGradCamp)"/>
+  <rect width="600" height="800" fill="url(#burstGrad)"/>
+
+  <!-- Geometric Rays Background Pattern -->
+  <g opacity="0.04" stroke="#ffffff" stroke-width="1.5">
+    <line x1="300" y1="320" x2="0" y2="0"/>
+    <line x1="300" y1="320" x2="200" y2="0"/>
+    <line x1="300" y1="320" x2="400" y2="0"/>
+    <line x1="300" y1="320" x2="600" y2="0"/>
+    <line x1="300" y1="320" x2="600" y2="300"/>
+    <line x1="300" y1="320" x2="600" y2="600"/>
+    <line x1="300" y1="320" x2="0" y2="300"/>
+    <line x1="300" y1="320" x2="0" y2="600"/>
+  </g>
+
+  <!-- Ornate Golden Borders -->
+  <rect x="20" y="20" width="560" height="760" rx="16" fill="none" stroke="url(#goldGradCamp)" stroke-width="3" filter="url(#goldGlowCamp)"/>
+  <rect x="28" y="28" width="544" height="744" rx="10" fill="none" stroke="url(#goldGradCamp)" stroke-width="1" stroke-dasharray="5,4" opacity="0.6"/>
+
+  <!-- Classical Election Filigrees -->
+  <g stroke="url(#goldGradCamp)" stroke-width="2" fill="none">
+    <path d="M30 70 L30 30 L70 30 M42 42 L55 42 M42 42 L42 55"/>
+    <path d="M570 70 L570 30 L530 30 M558 42 L545 42 M558 42 L558 55"/>
+    <path d="M30 730 L30 770 L70 770 M42 758 L55 758 M42 758 L42 745"/>
+    <path d="M570 730 L570 770 L530 770 M558 758 L545 758 M558 758 L558 745"/>
+  </g>
+
+  <!-- Top Ribbon Banner: বিসমিল্লাহির রাহমানির রাহিম / স্লোগান -->
+  <g transform="translate(300, 52)">
+    <rect x="-140" y="0" width="280" height="28" rx="14" fill="#000000" opacity="0.4" stroke="url(#goldGradCamp)" stroke-width="1"/>
+    <text x="0" y="19" font-family="'Hind Siliguri', sans-serif" font-size="13" font-weight="600" fill="url(#goldGradCamp)" text-anchor="middle" letter-spacing="1">★ জনগণের সেবায় নিবেদিত প্রাণ ★</text>
+  </g>
+
+  <!-- Main Occasion Badge: নির্বাচনী প্রচারণা -->
+  <g transform="translate(300, 95)">
+    <rect x="-130" y="0" width="260" height="38" rx="8" fill="url(#badgeGrad)" stroke="url(#goldGradCamp)" stroke-width="2" filter="url(#shadowCamp)"/>
+    <text x="0" y="26" font-family="'Noto Serif Bengali', 'Hind Siliguri', serif" font-size="20" font-weight="900" fill="#ffffff" text-anchor="middle">আসন্ন নির্বাচনী প্রচারণা</text>
+  </g>
+
+  <!-- Photo Area Composition (Dual/Triple Frame Structure) -->
+  <g transform="translate(300, 310)">
+    <!-- Central Hero Frame -->
+    <ellipse cx="0" cy="0" rx="110" ry="130" fill="#eab308" opacity="0.15" filter="url(#goldGlowCamp)"/>
+    <path d="M-85,95 L-85,-40 A85,85 0 0,1 85,-40 L85,95 Z" fill="#030c1c" stroke="url(#goldGradCamp)" stroke-width="4" filter="url(#shadowCamp)"/>
+    <!-- Inner Portrait Base -->
+    <path d="M-78,90 L-78,-40 A78,78 0 0,1 78,-40 L78,90 Z" fill="#071a3d"/>
+    <!-- Silhouette -->
+    <circle cx="0" cy="-15" r="36" fill="#0f2b60"/>
+    <path d="M-55,75 C-55,30 55,30 55,75 Z" fill="#0f2b60"/>
+    <text x="0" y="85" font-family="'Hind Siliguri', sans-serif" font-size="12" font-weight="700" fill="url(#goldGradCamp)" text-anchor="middle">প্রার্থীর মূল ছবি</text>
+
+    <!-- Right Side Ballot Symbol Box (নির্বাচনী প্রতীক) -->
+    <g transform="translate(135, 45)">
+      <circle cx="0" cy="0" r="38" fill="#ffffff" stroke="url(#goldGradCamp)" stroke-width="3" filter="url(#shadowCamp)"/>
+      <circle cx="0" cy="0" r="33" fill="none" stroke="#ca8a04" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <polygon points="0,-18 5,-5 18,-5 8,4 12,17 0,9 -12,17 -8,4 -18,-5 -5,-5" fill="#ca8a04"/>
+      <text x="0" y="27" font-family="'Hind Siliguri', sans-serif" font-size="9" font-weight="bold" fill="#051329" text-anchor="middle">প্রতীক</text>
+    </g>
+  </g>
+
+  <!-- Central Title & Appeal -->
+  <g transform="translate(300, 485)">
+    <text x="0" y="0" font-family="'Noto Serif Bengali', serif" font-size="28" font-weight="900" fill="#ffffff" text-anchor="middle" filter="url(#shadowCamp)">আপনার মূল্যবান ভোট ও দোয়া চাই</text>
+    <text x="0" y="26" font-family="'Hind Siliguri', sans-serif" font-size="15" font-weight="600" fill="url(#goldGradCamp)" text-anchor="middle">এলাকার সার্বিক উন্নয়ন ও ন্যায়ের পক্ষে ঐক্যবদ্ধ হোন</text>
+  </g>
+
+  <!-- Candidate Name Showcase -->
+  <g transform="translate(300, 565)">
+    <rect x="-190" y="-30" width="380" height="58" rx="10" fill="#051838" stroke="url(#goldGradCamp)" stroke-width="2" filter="url(#shadowCamp)"/>
+    <text x="0" y="8" font-family="'Noto Serif Bengali', serif" font-size="28" font-weight="900" fill="#ffffff" text-anchor="middle">মোহাম্মদ আব্দুল্লাহ আল-মামুন</text>
+    <text x="0" y="44" font-family="'Hind Siliguri', sans-serif" font-size="15" font-weight="bold" fill="#fde047" text-anchor="middle">চেয়ারম্যান পদপ্রার্থী | ১নং ওয়ার্ড</text>
+    <text x="0" y="65" font-family="'Hind Siliguri', sans-serif" font-size="13" font-weight="500" fill="#cbd5e1" text-anchor="middle">বাংলাদেশ জাতীয়তাবাদী ফোরাম / নাগরিক কমিটি</text>
+  </g>
+
+  <!-- Slogan Banner Box -->
+  <g transform="translate(300, 675)">
+    <rect x="-210" y="-12" width="420" height="32" rx="6" fill="#000000" opacity="0.4" stroke="url(#goldGradCamp)" stroke-width="1"/>
+    <text x="0" y="10" font-family="'Hind Siliguri', sans-serif" font-size="13" font-style="italic" fill="#ffffff" text-anchor="middle">&ldquo;দুর্নীতি মুক্ত সমাজ ও জনকল্যাণই আমাদের অঙ্গীকার&rdquo;</text>
+  </g>
+
+  <!-- Bottom Promotional Ribbon Footer -->
+  <g transform="translate(300, 742)">
+    <rect x="-240" y="-18" width="480" height="36" rx="6" fill="url(#goldGradCamp)" filter="url(#shadowCamp)"/>
+    <text x="0" y="6" font-family="'Hind Siliguri', sans-serif" font-size="15" font-weight="900" fill="#051329" text-anchor="middle" letter-spacing="0.5">প্রচারে: সর্বস্তরের সচেতন এলাকাবাসী</text>
+  </g>
+</svg>
