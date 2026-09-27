@@ -6,13 +6,89 @@ export const getAuthToken = (): string => {
     return localStorage.getItem('token') || ''
 }
 
-const apiFetch = (url: string, options: RequestInit = {}) => {
+// ─── Dynamic API URL Resolution ──────────────────────────────────────────────
+export const getBaseApiUrl = (): string => {
+    const raw = (
+        process.env.NEXT_PUBLIC_API_URL ||
+        process.env.NEXT_PUBLIC_API_BASE_URL ||
+        process.env.NEXT_PUBLIC_BACKEND_URL ||
+        ''
+    ).trim()
+
+    if (raw) {
+        const clean = raw.replace(/\/+$/, '')
+        return clean.endsWith('/api') ? clean : `${clean}/api`
+    }
+    return 'http://localhost:5000/api'
+}
+
+export const getApiEndpoint = (path: string, specificEnv?: string): string => {
+    const cleanPath = path.startsWith('/') ? path : `/${path}`
+
+    if (specificEnv && specificEnv.trim()) {
+        const clean = specificEnv.trim().replace(/\/+$/, '')
+        // If the variable already includes a full path with /api/
+        if (clean.includes('/api/')) {
+            return clean
+        }
+        // If it was just a domain like "https://myapp.com"
+        const base = clean.endsWith('/api') ? clean : `${clean}/api`
+        return `${base}${cleanPath}`
+    }
+
+    return `${getBaseApiUrl()}${cleanPath}`
+}
+
+const apiFetch = async (url: string, options: RequestInit = {}) => {
     const token = getAuthToken()
     const headers: Record<string, string> = {
         ...((options.headers as Record<string, string>) || {}),
     }
     if (token) headers['Authorization'] = `Bearer ${token}`
-    return fetch(url, { ...options, credentials: 'include', headers })
+
+    try {
+        const res = await fetch(url, { ...options, credentials: 'include', headers })
+        return res
+    } catch (networkErr: any) {
+        console.error('Fetch network error:', networkErr, 'for URL:', url)
+        throw new Error(
+            `সার্ভারের সাথে সংযোগ করা সম্ভব হয়নি (${networkErr?.message || 'Network Error'})। ব্যাকএন্ড সার্ভার চালু আছে কি না এবং URL সঠিক কি না যাচাই করুন।`
+        )
+    }
+}
+
+export const parseApiResponse = async (res: Response) => {
+    const contentType = res.headers.get('content-type') || ''
+
+    if (contentType.includes('application/json')) {
+        let data: any
+        try {
+            data = await res.json()
+        } catch {
+            data = null
+        }
+
+        if (!res.ok) {
+            const errorMsg =
+                data?.message ||
+                data?.error ||
+                `সার্ভার এরর (স্ট্যাটাস: ${res.status})`
+            const err = new Error(errorMsg)
+            ;(err as any).data = data
+            throw err
+        }
+        return data
+    }
+
+    // Response is HTML or non-JSON (e.g. 404, 502 Bad Gateway from Render/Vercel)
+    await res.text() // consume stream
+    if (res.status === 404) {
+        throw new Error(`সার্ভার এন্ডপয়েন্ট পাওয়া যায়নি (404 Not Found)। দয়া করে Backend URL সঠিক কিনা যাচাই করুন।`)
+    } else if (res.status === 502 || res.status === 503 || res.status === 504) {
+        throw new Error(`ব্যাকএন্ড সার্ভার স্লিপে আছে বা রিস্টার্ট হচ্ছে (${res.status} Bad Gateway)। অনুগ্রহ করে ৩০-৪০ সেকেন্ড পর আবার চেষ্টা করুন।`)
+    } else {
+        throw new Error(`সার্ভার থেকে অপ্রত্যাশিত রেসপন্স এসেছে (স্ট্যাটাস: ${res.status})।`)
+    }
 }
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -51,35 +127,35 @@ export interface PosterRecord {
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 export const registerUser = async (data: { name: string; email: string; password: string }) => {
-    const url = process.env.NEXT_PUBLIC_API_URL_AUTH_REGISTER as string
+    const url = getApiEndpoint('/auth/register', process.env.NEXT_PUBLIC_API_URL_AUTH_REGISTER)
     const res = await apiFetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
     })
-    return res.json()
+    return parseApiResponse(res)
 }
 
 export const loginUser = async (data: { email: string; password: string }) => {
-    const url = process.env.NEXT_PUBLIC_API_URL_AUTH_LOGIN as string
+    const url = getApiEndpoint('/auth/login', process.env.NEXT_PUBLIC_API_URL_AUTH_LOGIN)
     const res = await apiFetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
     })
-    return res.json()
+    return parseApiResponse(res)
 }
 
 // ─── File Upload ──────────────────────────────────────────────────────────────
 export const uploadPhoto = async (file: File): Promise<string> => {
     const formData = new FormData()
     formData.append('file', file)
-    const url = process.env.NEXT_PUBLIC_API_URL_UPLOAD as string
+    const url = getApiEndpoint('/upload', process.env.NEXT_PUBLIC_API_URL_UPLOAD)
     const res = await apiFetch(url, {
         method: 'POST',
         body: formData,
     })
-    const data = await res.json()
+    const data = await parseApiResponse(res)
     return data.url
 }
 
@@ -95,10 +171,11 @@ const FALLBACK_TEMPLATES = [
 
 export const getTemplates = async () => {
     try {
-        const url = process.env.NEXT_PUBLIC_API_URL_TEMPLATES as string
+        const url = getApiEndpoint('/templates', process.env.NEXT_PUBLIC_API_URL_TEMPLATES)
         const res = await apiFetch(url)
         if (!res.ok) return FALLBACK_TEMPLATES
-        return res.json()
+        const data = await parseApiResponse(res)
+        return Array.isArray(data) && data.length > 0 ? data : FALLBACK_TEMPLATES
     } catch {
         return FALLBACK_TEMPLATES
     }
@@ -106,10 +183,11 @@ export const getTemplates = async () => {
 
 export const getTemplateById = async (id: string) => {
     try {
-        const url = `${process.env.NEXT_PUBLIC_API_URL_TEMPLATES}/${id}`
+        const base = getApiEndpoint('/templates', process.env.NEXT_PUBLIC_API_URL_TEMPLATES)
+        const url = `${base}/${id}`
         const res = await apiFetch(url)
         if (res.ok) {
-            const data = await res.json()
+            const data = await parseApiResponse(res)
             if (data && (data._id || data.id || data.title)) return data
         }
     } catch {
@@ -136,34 +214,34 @@ export const createPoster = async (formData: PosterFormData): Promise<PosterReco
     if (formData.templateStyle) data.append('templateStyle', formData.templateStyle)
     formData.photos.forEach((photo) => data.append('photos', photo))
 
-    const url = process.env.NEXT_PUBLIC_API_URL_POSTERS as string
+    const url = getApiEndpoint('/posters', process.env.NEXT_PUBLIC_API_URL_POSTERS)
     const res = await apiFetch(url, {
         method: 'POST',
         body: data,
     })
-    return res.json()
+    return parseApiResponse(res)
 }
 
 export const getPosterById = async (id: string): Promise<PosterRecord> => {
-    const url = `${process.env.NEXT_PUBLIC_API_URL_POSTERS}/${id}`
-    const res = await apiFetch(url)
-    return res.json()
+    const base = getApiEndpoint('/posters', process.env.NEXT_PUBLIC_API_URL_POSTERS)
+    const res = await apiFetch(`${base}/${id}`)
+    return parseApiResponse(res)
 }
 
 export const regeneratePoster = async (id: string): Promise<PosterRecord> => {
-    const url = `${process.env.NEXT_PUBLIC_API_URL_POSTERS}/${id}/regenerate`
-    const res = await apiFetch(url, {
+    const base = getApiEndpoint('/posters', process.env.NEXT_PUBLIC_API_URL_POSTERS)
+    const res = await apiFetch(`${base}/${id}/regenerate`, {
         method: 'POST',
     })
-    return res.json()
+    return parseApiResponse(res)
 }
 
 export const getUserPosters = async (): Promise<PosterRecord[]> => {
     try {
-        const url = `${process.env.NEXT_PUBLIC_API_URL_POSTERS}/user/me`
-        const res = await apiFetch(url)
+        const base = getApiEndpoint('/posters', process.env.NEXT_PUBLIC_API_URL_POSTERS)
+        const res = await apiFetch(`${base}/user/me`)
         if (!res.ok) throw new Error('API error')
-        const data = await res.json()
+        const data = await parseApiResponse(res)
         return Array.isArray(data) ? data : (data.posters || [])
     } catch {
         return [
@@ -174,14 +252,14 @@ export const getUserPosters = async (): Promise<PosterRecord[]> => {
 }
 
 export const deletePoster = async (id: string) => {
-    const url = `${process.env.NEXT_PUBLIC_API_URL_POSTERS}/${id}`
-    const res = await apiFetch(url, { method: 'DELETE' })
-    return res.json()
+    const base = getApiEndpoint('/posters', process.env.NEXT_PUBLIC_API_URL_POSTERS)
+    const res = await apiFetch(`${base}/${id}`, { method: 'DELETE' })
+    return parseApiResponse(res)
 }
 
 // ─── Export & Download ────────────────────────────────────────────────────────
 export const getPosterPdfUrl = (id: string): string => {
-    const base = process.env.NEXT_PUBLIC_API_URL_POSTERS || 'http://localhost:5000/api/posters'
+    const base = getApiEndpoint('/posters', process.env.NEXT_PUBLIC_API_URL_POSTERS)
     return `${base}/${id}/pdf`
 }
 
@@ -210,13 +288,13 @@ export const downloadFile = async (url: string, filename: string) => {
 }
 
 // ─── Admin APIs ───────────────────────────────────────────────────────────────
-const ADMIN_API_BASE = 'http://localhost:5000/api/admin'
+const getAdminBase = () => getApiEndpoint('/admin', process.env.NEXT_PUBLIC_API_URL_ADMIN)
 
 export const getAdminStats = async () => {
     try {
-        const res = await apiFetch(`${ADMIN_API_BASE}/stats`)
+        const res = await apiFetch(`${getAdminBase()}/stats`)
         if (!res.ok) throw new Error('Failed to fetch stats')
-        return res.json()
+        return parseApiResponse(res)
     } catch {
         return null
     }
@@ -224,54 +302,54 @@ export const getAdminStats = async () => {
 
 export const getAdminTemplates = async () => {
     try {
-        const res = await apiFetch(`${ADMIN_API_BASE}/templates`)
+        const res = await apiFetch(`${getAdminBase()}/templates`)
         if (!res.ok) throw new Error('Failed to fetch admin templates')
-        return res.json()
+        return parseApiResponse(res)
     } catch {
         return []
     }
 }
 
 export const createAdminTemplate = async (templateData: any) => {
-    const res = await apiFetch(`${ADMIN_API_BASE}/templates`, {
+    const res = await apiFetch(`${getAdminBase()}/templates`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(templateData),
     })
-    return res.json()
+    return parseApiResponse(res)
 }
 
 export const updateAdminTemplate = async (id: string, updates: any) => {
-    const res = await apiFetch(`${ADMIN_API_BASE}/templates/${id}`, {
+    const res = await apiFetch(`${getAdminBase()}/templates/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updates),
     })
-    return res.json()
+    return parseApiResponse(res)
 }
 
 export const deleteAdminTemplate = async (id: string) => {
-    const res = await apiFetch(`${ADMIN_API_BASE}/templates/${id}`, {
+    const res = await apiFetch(`${getAdminBase()}/templates/${id}`, {
         method: 'DELETE',
     })
-    return res.json()
+    return parseApiResponse(res)
 }
 
 export const getAdminPosters = async () => {
     try {
-        const res = await apiFetch(`${ADMIN_API_BASE}/posters`)
+        const res = await apiFetch(`${getAdminBase()}/posters`)
         if (!res.ok) throw new Error('Failed to fetch admin posters')
-        return res.json()
+        return parseApiResponse(res)
     } catch {
         return []
     }
 }
 
 export const toggleFlagAdminPoster = async (id: string, flagged: boolean) => {
-    const res = await apiFetch(`${ADMIN_API_BASE}/posters/${id}/flag`, {
+    const res = await apiFetch(`${getAdminBase()}/posters/${id}/flag`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ flagged }),
     })
-    return res.json()
+    return parseApiResponse(res)
 }
